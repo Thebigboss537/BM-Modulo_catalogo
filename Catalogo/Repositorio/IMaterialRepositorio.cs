@@ -9,5 +9,6 @@ namespace Catalogo.Repositorio
         Task<MaterialDto> CreateUpdate(MaterialDto MaterialDto);
         Task<MaterialDto> AgregarArchivo(Material_archivoDto Material_archivoDto);
         Task<bool> DeleteMaterial(int id);
+        Task<bool> Eliminarpdf(int id);
     }
 }

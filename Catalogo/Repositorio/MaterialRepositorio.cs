@@ -80,6 +80,31 @@ namespace Catalogo.Repositorio
             }
         }
 
+        public async Task<bool> Eliminarpdf(int id)
+        {
+            try
+            {
+                Material Material = await _db.Materiales.FindAsync(id);
+                if (Material == null)
+                {
+                    return false;
+                }
+                if (Material.Archivo != null)
+                {
+                    await this.azureStorageService.DeleteAsync(Material.Archivo);
+                    Material.Archivo = null;
+                }
+                _db.Materiales.Update(Material);
+                await _db.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public async Task<MaterialDto> GetMaterialById(int id)
         {
             MaterialDto Material = _mapper.Map<MaterialDto>(await _db.Materiales.Include(e => e.Editorial).Include(e => e.Sede).Include(e => e.Tipo_material).Where(x => x.Id_material == id).FirstOrDefaultAsync());

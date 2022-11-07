@@ -268,6 +268,33 @@ namespace Catalogo.Controllers
             }
         }
 
+        [HttpDelete("eliminarpdf/{id}")]
+        public async Task<IActionResult> DeletePdfMaterial(int id)
+        {
+            try
+            {
+                bool estaeliminado = await _MaterialRepositorio.Eliminarpdf(id);
+                if (estaeliminado)
+                {
+                    _response.Result = estaeliminado;
+                    _response.DisplayMessage = "PDF eliminado con exito";
+                    return Ok(_response);
+                }
+                else
+                {
+                    _response.IsSuccess = false;
+                    _response.DisplayMessage = "Error al eliminar el PDF";
+                    return BadRequest(_response);
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+                return BadRequest(_response);
+            }
+        }
+
         public class gets
         {
             public List<Tipo_materialDto> tipo_material { get; set; }
