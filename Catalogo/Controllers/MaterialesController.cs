@@ -129,8 +129,7 @@ namespace Catalogo.Controllers
             try
             {
 
-                /*if (Material_ArchivoDto.Archivo != null)
-                {*/
+                /*
 
                 var filePath = Path.Combine(_enviroment.ContentRootPath, "Archivos", Material_ArchivoDto.Archivo.FileName.Replace(Material_ArchivoDto.Archivo.FileName, Material_ArchivoDto.Titulo + ".pdf"));
 
@@ -141,10 +140,10 @@ namespace Catalogo.Controllers
                     await Material_ArchivoDto.Archivo.CopyToAsync(stream);
                 }
 
-                Material_ArchivoDto.Ruta = filepath2;
+                Material_ArchivoDto.Ruta = filepath2;*/
                 MaterialDto model = await _MaterialRepositorio.AgregarArchivo(Material_ArchivoDto);
                 _response.Result = model;
-                /*}*/
+                
                 return Ok(_response);
             }
             catch (Exception ex)

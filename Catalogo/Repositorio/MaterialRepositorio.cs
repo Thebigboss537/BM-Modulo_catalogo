@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Catalogo.Data;
 using Catalogo.Models;
 using Catalogo.Models.Dto;
+using Catalogo.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +15,21 @@ namespace Catalogo.Repositorio
 
         private readonly DataContext _db;
         private IMapper _mapper;
-        
-        public MaterialRepositorio(DataContext db, IMapper mapper)
+        private readonly IAzureStorageService azureStorageService;
+
+        public MaterialRepositorio(DataContext db, IMapper mapper, IAzureStorageService azureStorageService)
         {
-            
+            this.azureStorageService = azureStorageService;
             _db = db;
             _mapper = mapper;
         }
         public async Task<MaterialDto> AgregarArchivo(Material_archivoDto Material_ArchivoDto)
         {
             var a = await _db.Materiales.FindAsync(Material_ArchivoDto.Id_material);
-            a.Archivo = Material_ArchivoDto.Ruta;
+
+            a.Archivo = await this.azureStorageService.UploadAsync(Material_ArchivoDto.Archivo);
+
+            //a.Archivo = Material_ArchivoDto.Ruta;
             _db.Materiales.Update(a);
             await _db.SaveChangesAsync();
             return _mapper.Map<Material, MaterialDto>(a);
@@ -34,6 +40,8 @@ namespace Catalogo.Repositorio
             Material Material = _mapper.Map<MaterialDto, Material>(MaterialDto);
             if (Material.Id_material > 0)
             {
+                
+
                 _db.Materiales.Update(Material);
             }
             else
@@ -56,6 +64,10 @@ namespace Catalogo.Repositorio
                 if (Material == null)
                 {
                     return false;
+                }
+                if (Material.Archivo != null)
+                {
+                    await this.azureStorageService.DeleteAsync(Material.Archivo);
                 }
                 _db.Materiales.Remove(Material);
                 await _db.SaveChangesAsync();

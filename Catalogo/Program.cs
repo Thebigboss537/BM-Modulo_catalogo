@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using Catalogo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,7 @@ builder.Services.AddScoped<ICategoriaRepositorio, CategoriaRepositorio>();
 builder.Services.AddScoped<IMaterialRepositorio, MaterialRepositorio>();
 builder.Services.AddScoped<IMaterial_autorRepositorio, Material_autorRepositorio>();
 builder.Services.AddScoped<IMaterial_categoriaRepositorio, Material_categoriaRepositorio>();
+builder.Services.AddScoped<IAzureStorageService, AzureStorageService>();
 
 
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
