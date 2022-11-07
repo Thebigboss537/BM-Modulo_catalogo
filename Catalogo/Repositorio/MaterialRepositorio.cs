@@ -27,7 +27,16 @@ namespace Catalogo.Repositorio
         {
             var a = await _db.Materiales.FindAsync(Material_ArchivoDto.Id_material);
 
-            a.Archivo = await this.azureStorageService.UploadAsync(Material_ArchivoDto.Archivo);
+            if (a.Archivo != null)
+            {
+                a.Archivo = await this.azureStorageService.UploadAsync(Material_ArchivoDto.Archivo, a.Archivo);
+            }
+            else
+            {
+                a.Archivo = await this.azureStorageService.UploadAsync(Material_ArchivoDto.Archivo);
+            }
+
+            
 
             //a.Archivo = Material_ArchivoDto.Ruta;
             _db.Materiales.Update(a);
