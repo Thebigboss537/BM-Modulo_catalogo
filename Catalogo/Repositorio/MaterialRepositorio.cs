@@ -49,7 +49,7 @@ namespace Catalogo.Repositorio
             Material Material = _mapper.Map<MaterialDto, Material>(MaterialDto);
             if (Material.Id_material > 0)
             {
-                var a = await _db.Materiales.FindAsync(Material.Id_material);
+                var a = await _db.Materiales.AsNoTracking().FirstOrDefaultAsync(e => e.Id_material == Material.Id_material);
                 if (a.Archivo != null)
                 {
                     Material.Archivo = a.Archivo;
